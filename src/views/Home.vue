@@ -1,17 +1,16 @@
 <template>
   <div>
-    <h1>Hello World</h1>
+    <i-header></i-header>
   </div>
 </template>
 
 <script>
+import IHeader from "@/components/IHeader"
+
 export default {
-  created() {
-    console.log(process.env)
-  }
+  components: { IHeader },
+  created() {}
 }
 </script>
 
-<style>
-
-</style>
+<style></style>

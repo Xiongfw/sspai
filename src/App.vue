@@ -4,4 +4,10 @@
   </div>
 </template>
 
-<style lang="scss"></style>
+<style lang="scss">
+#app {
+  min-height: 100%;
+  position: relative;
+  box-sizing: border-box;
+}
+</style>

@@ -6,7 +6,7 @@
 
 <style lang="scss">
 #app {
-  min-height: 100%;
+  height: 100%;
   position: relative;
   box-sizing: border-box;
 }

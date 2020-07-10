@@ -1,63 +1,70 @@
 <template>
   <div class="home-page">
-    <i-header></i-header>
-    <div class="main">
-      <!-- banner轮播图 -->
-      <div class="swiper-container banner-container">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide" :style="`--url: url(${require('@/assets/imgs/swiper1.jpg')})`" ></div>
-          <div class="swiper-slide" :style="`--url: url(${require('@/assets/imgs/swiper2.jpg')})`" ></div>
-          <div class="swiper-slide" :style="`--url: url(${require('@/assets/imgs/swiper3.jpg')})`" ></div>
-        </div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-prev iconfont icon-left"></div>
-        <div class="swiper-button-next iconfont icon-right"></div>
+    <!-- banner轮播图 -->
+    <div class="swiper-container banner-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><a href="javascript:void(0)"><img src="~@/assets/imgs/swiper1.jpg"></a></div>
+        <div class="swiper-slide"><a href="javascript:void(0)"><img src="~@/assets/imgs/swiper2.jpg"></a></div>
+        <div class="swiper-slide"><a href="javascript:void(0)"><img src="~@/assets/imgs/swiper3.jpg"></a></div>
       </div>
-      <!-- card 导航 -->
-      <div class="swiper-container card-container">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide" :style="`--url: url(${require('@/assets/imgs/card1.png')})`"></div>
-          <div class="swiper-slide" :style="`--url: url(${require('@/assets/imgs/card2.png')})`"></div>
-          <div class="swiper-slide" :style="`--url: url(${require('@/assets/imgs/card3.png')})`"></div>
-          <div class="swiper-slide" :style="`--url: url(${require('@/assets/imgs/card4.png')})`"></div>
-        </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev iconfont icon-left"></div>
+      <div class="swiper-button-next iconfont icon-right"></div>
+    </div>
+    <!-- card 导航 -->
+    <div class="swiper-container card-container">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide card-item"><a href="javascript:void(0)"><img src="~@/assets/imgs/card1.png"></a></div>
+        <div class="swiper-slide card-item"><a href="javascript:void(0)"><img src="~@/assets/imgs/card2.png"></a></div>
+        <div class="swiper-slide card-item"><a href="javascript:void(0)"><img src="~@/assets/imgs/card3.png"></a></div>
+        <div class="swiper-slide card-item"><a href="javascript:void(0)"><img src="~@/assets/imgs/card4.png"></a></div>
       </div>
-      <!-- 选项卡 -->
-      <div class="swiper-container tab-container">
+    </div>
+    <!-- 选项卡 -->
+    <div class="tabs-box" ref="tabsBox" :style="{'height': tabsHeight}">
+      <div class="swiper-container tab-container" :class="{'is-fixed': tabsFixed}" ref="tabs">
         <ul class="swiper-wrapper">
-          <li :class="['swiper-slide', {'is-active': tabIndex == 1}]" @click="tabIndex = 1">推荐</li>
-          <li :class="['swiper-slide', {'is-active': tabIndex == 2}]" @click="tabIndex = 2">最热</li>
-          <li :class="['swiper-slide', {'is-active': tabIndex == 3}]" @click="tabIndex = 3">应用推荐</li>
-          <li :class="['swiper-slide', {'is-active': tabIndex == 4}]" @click="tabIndex = 4">生活方式</li>
-          <li :class="['swiper-slide', {'is-active': tabIndex == 5}]" @click="tabIndex = 5">效率技巧</li>
-          <li :class="['swiper-slide', {'is-active': tabIndex == 6}]" @click="tabIndex = 6">播客</li>
+          <li :class="['swiper-slide tab-item', {'is-active': tabIndex == 1}]" @click="tabIndex = 1">推荐</li>
+          <li :class="['swiper-slide tab-item', {'is-active': tabIndex == 2}]" @click="tabIndex = 2">最热</li>
+          <li :class="['swiper-slide tab-item', {'is-active': tabIndex == 3}]" @click="tabIndex = 3">应用推荐</li>
+          <li :class="['swiper-slide tab-item', {'is-active': tabIndex == 4}]" @click="tabIndex = 4">生活方式</li>
+          <li :class="['swiper-slide tab-item', {'is-active': tabIndex == 5}]" @click="tabIndex = 5">效率技巧</li>
+          <li :class="['swiper-slide tab-item', {'is-active': tabIndex == 6}]" @click="tabIndex = 6">播客</li>
         </ul>
       </div>
-      <div class="tab-content">
-        <div v-for="i in 100">{{i}}</div>
-      </div>
-      <i-footer></i-footer>
     </div>
+    <div class="tab-content">
+      <div v-for="i in 100">{{i}}</div>
+    </div>
+    <!-- <i-footer></i-footer> -->
   </div>
 </template>
 
 <script>
-import IHeader from "@/components/IHeader"
 import IFooter from "@/components/IFooter"
 import Swiper from "swiper"
+import { throttle } from "lodash"
 
 export default {
-  components: { IHeader, IFooter },
+  components: { IFooter },
   created() {},
   mounted() {
     this.initBannerSwiper()
     this.initCardSwiper()
     this.initTabSwiper()
+    this.tabsHeight = this.$refs.tabs.getBoundingClientRect().height + 'px'
+    document.addEventListener("scroll", throttle(this.handleScroll, 60))
+  },
+  beforeDestroy() {
+    document.removeEventListener("scroll", this.handleScroll)
   },
   data() {
     return {
       // 当前选项卡
-      tabIndex: 1
+      tabIndex: 1,
+      tabsFixed: false,
+      // tabs导航
+      tabsHeight: 0
     }
   },
   methods: {
@@ -87,7 +94,7 @@ export default {
       return new Swiper(".card-container", {
         direction: "horizontal",
         slidesPerView: "auto",
-        autoHeight: true
+        autoHeight: false
       })
     },
     /**
@@ -96,32 +103,36 @@ export default {
     initTabSwiper() {
       return new Swiper(".tab-container", {
         direction: "horizontal",
-        slidesPerView: "auto",
-        autoHeight: true
+        slidesPerView: "auto"
       })
+    },
+    handleScroll(e) {
+      const header = document.querySelector("#header")
+      const tabsBox = this.$refs.tabsBox
+      const headerHeight = header.getBoundingClientRect().height
+      const offsetTop = tabsBox.getBoundingClientRect().top - headerHeight
+      if (offsetTop <= 0) {
+        this.tabsFixed = true
+      } else {
+        this.tabsFixed = false
+      }
     }
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.home-page {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-  .main {
-    flex: 1;
-    overflow: auto;
-  }
+.swiper-container {
+  user-select: none;
 }
 // banner轮播图
 .banner-container {
   --swiper-pagination-color: #fd281a;
   height: 45rem;
   .swiper-slide {
-    background: var(--url) no-repeat;
-    background-size: cover;
+    img {
+      height: 100%;
+    }
   }
   .swiper-button-next,
   .swiper-button-prev {
@@ -140,52 +151,55 @@ export default {
 }
 // card
 .card-container {
-  padding: 3rem 0rem;
-  .swiper-slide {
-    width: calc(100% / 2 - 3rem * 2);
+  // padding: 5rem 10rem;
+  padding: 5rem 3rem;
+  .swiper-wrapper {
+  }
+  .card-item {
+    width: calc(100% / 2 - 1.5rem * 2);
     height: 22rem;
-    background: var(--url) no-repeat center center/100%;
-    border-radius: 2rem;
-    transition: background-size 0.3s;
     box-shadow: 0 0.8rem 0.8rem 0 rgba(0, 0, 0, 0.15);
-    margin: 0 3rem;
-    &:active {
-      background-size: 120%;
+    margin: 0rem 1.5rem;
+    overflow: hidden;
+    border-radius: 1.6rem;
+    transform: rotate(0deg);
+    img {
+      width: 100%;
+      transition: transform 0.5s;
+    }
+    img:hover {
+      transform: scale(1.1);
     }
   }
 }
 // tab
 .tab-container {
-  padding: 1rem 2rem;
-  background: #fff;
-  position: sticky;
-  top: -1px;
-  .swiper-slide {
+  padding: 0rem 3rem;
+  .swiper-wrapper {
+    font-size: 1.1em;
+    font-weight: 500;
+  }
+  &.is-fixed {
+    position: fixed;
+    left: 0;
+    top: $header-height;
+    width: 100%;
+    background: #fff;
+  }
+  .tab-item {
     position: relative;
-    padding: 3rem 0rem;
-    width: 24%;
+    width: auto;
     color: #8e8787;
     text-align: center;
-    &::after {
-      content: "";
-      display: inline-block;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 0.4rem;
-      background: #d71a1b;
-      transition: all 0.35s;
-      transform: scale(0);
-    }
+    border-bottom: 0.6rem solid transparent;
+    transition: all 0.5s;
+    line-height: 12rem;
+    padding: 0 3rem;
+    margin-right: 2rem;
     &.is-active {
       color: #d71a1b;
-    }
-    &.is-active::after {
-      transform: scale(1);
+      border-bottom: 0.6rem solid #d71a1b;
     }
   }
-}
-.tab-content {
-  background: #f4f4f4;
 }
 </style>

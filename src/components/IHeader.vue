@@ -15,11 +15,17 @@ export default {
 
 <style lang="scss" scoped>
 .header {
-  background: $color-text;
+  width: 100%;
+  height: $header-height;
+  padding: 0 3rem;
   display: flex;
   align-items: center;
-  height: 13.4rem;
-  padding: 0 3rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+  box-sizing: border-box;
+  background: $color-text;
   .logo {
     height: 72%;
     margin-right: auto;
